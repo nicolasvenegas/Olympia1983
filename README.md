@@ -79,3 +79,50 @@ npm install
 npm run dev      # entorno de desarrollo
 npm run build    # compilación y build de producción
 ```
+
+## Cómo funciona y cómo publicar una versión nueva
+
+### Arquitectura
+
+La aplicación tiene **dos caras** que comparten el mismo código:
+
+1. **Web** (`Vite + TypeScript + Canvas 2D`): se despliega públicamente como
+   GitHub Page en <https://nicolasvenegas.github.io/olympiaMD/>. El build usa
+   `base: "/olympiaMD/"` en `vite.config.ts` para que los recursos carguen bien
+   bajo ese subdirectorio.
+2. **Escritorio** (`Tauri 2`): un shell nativo (WebView2 de Windows) que envuelve
+   la misma web y genera un instalador `.exe` descargable desde las *Releases*.
+   Toda la estructura está en `src-tauri/` (`Cargo.toml`, `tauri.conf.json`,
+   `src/main.rs`, iconos y capabilities).
+
+### Cómo publicar una versión nueva del `.exe`
+
+La compilación del instalador la hace GitHub Actions (no hace falta tener Rust
+ni Visual Studio en el equipo local). Mediante el workflow
+`.github/workflows/build.yml` que usa `tauri-apps/tauri-action`.
+
+Para publicar una nueva versión **solo hay que crear y subir una etiqueta `v*`**:
+
+```bash
+# 1. Añadir los cambios y subirlos
+git add -A
+git commit -m "Descripción del cambio"
+git push
+
+# 2. Crear una etiqueta de versión y subirla (activa el workflow de build)
+git tag v0.1.1
+git push origin v0.1.1
+```
+
+El workflow compila automáticamente el frontend y el binario de Tauri en
+Windows, y al final crea/actualiza la release con los instaladores:
+
+- `Olympia.MD_<versión>_x64-setup.exe` (instalador NSIS)
+- `Olympia.MD_<versión>_x64_en-US.msi`
+
+También se puede disparar el workflow manualmente desde la pestaña **Actions**
+(*Actions → Build Windows installer → Run workflow*), útil para generar
+instaladores sin crear una etiqueta.
+
+> El identificador de versión se toma de `src-tauri/tauri.conf.json`
+> (`"version": "0.1.0"`), mantenlo sincronizado con la etiqueta `v*`.

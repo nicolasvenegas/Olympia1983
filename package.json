@@ -1,7 +1,7 @@
 {
   "name": "olympiamd",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Emulación de máquina de escribir eléctrica AEG Olympia Carrera MD: escritura permanente sobre una única hoja A4, exportación en imagen.",
   "scripts": {
