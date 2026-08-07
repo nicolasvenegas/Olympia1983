@@ -1,7 +1,7 @@
 {
   "name": "olympiamd",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.2.0",
   "type": "module",
   "description": "Emulación de máquina de escribir eléctrica AEG Olympia Carrera MD: escritura permanente sobre una única hoja A4, exportación en imagen.",
   "scripts": {
@@ -14,5 +14,8 @@
     "@tauri-apps/cli": "^2.2.0",
     "typescript": "^5.6.3",
     "vite": "^6.0.3"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.11.1"
   }
 }

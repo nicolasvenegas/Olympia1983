@@ -2,6 +2,14 @@ import { PAGE_W, PAGE_H, COLS } from "./layout";
 import { renderPage } from "./render";
 import { Typewriter } from "./engine";
 import { exportPagePng } from "./export";
+import {
+  isDesktop,
+  loadSmtpConfig,
+  saveSmtpConfig,
+  sendPageByEmail,
+  type SmtpConfig,
+  type MailDraft,
+} from "./mail";
 
 const engine = new Typewriter();
 
@@ -13,6 +21,21 @@ const ctx = canvas.getContext("2d")!;
 const pageLabel = document.getElementById("pageLabel") as HTMLElement;
 const charCount = document.getElementById("charCount") as HTMLElement;
 const exportBtn = document.getElementById("exportBtn") as HTMLButtonElement;
+const mailBtn = document.getElementById("mailBtn") as HTMLButtonElement;
+const mailDialog = document.getElementById("mailDialog") as HTMLDialogElement;
+const mailForm = document.getElementById("mailForm") as HTMLFormElement;
+const mailStatus = document.getElementById("mailStatus") as HTMLElement;
+const mailSendBtn = document.getElementById("mailSendBtn") as HTMLButtonElement;
+const mailCloseBtn = document.getElementById("mailCloseBtn") as HTMLButtonElement;
+const mailTo = document.getElementById("mailTo") as HTMLInputElement;
+const mailSubject = document.getElementById("mailSubject") as HTMLInputElement;
+const mailBody = document.getElementById("mailBody") as HTMLTextAreaElement;
+const smtpHost = document.getElementById("smtpHost") as HTMLInputElement;
+const smtpPort = document.getElementById("smtpPort") as HTMLInputElement;
+const smtpTls = document.getElementById("smtpTls") as HTMLSelectElement;
+const smtpUsername = document.getElementById("smtpUsername") as HTMLInputElement;
+const smtpPassword = document.getElementById("smtpPassword") as HTMLInputElement;
+const smtpFrom = document.getElementById("smtpFrom") as HTMLInputElement;
 
 let caretVisible = true;
 
@@ -59,7 +82,16 @@ async function exportAndNewPage(): Promise<void> {
 
 const DESTRUCTIVE_MOD = new Set(["backspace", "delete", "z", "x", "v", "a", "y"]);
 
+function isFormField(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  const t = target.tagName;
+  return t === "INPUT" || t === "TEXTAREA" || t === "SELECT" || t === "BUTTON";
+}
+
 function onKeyDown(e: KeyboardEvent): void {
+  // Con el diálogo de correo abierto, la escritura va a sus campos.
+  if (mailDialog.open || isFormField(e.target)) return;
+
   // Bloquea cortar/pegar/borrar/deshacer/seleccionar con modificador.
   if (e.ctrlKey || e.metaKey) {
     const k = e.key.toLowerCase();
@@ -127,6 +159,87 @@ function blink(t: number): void {
 window.addEventListener("keydown", onKeyDown, { capture: true });
 exportBtn.addEventListener("click", () => void exportAndNewPage());
 canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+
+/** Rellena el formulario con la configuración guardada y el state actual. */
+function fillMailForm(): void {
+  const smtp = loadSmtpConfig();
+  smtpHost.value = smtp.host ?? "";
+  smtpPort.value = smtp.port ? String(smtp.port) : "587";
+  smtpTls.value = smtp.tls ?? "starttls";
+  smtpUsername.value = smtp.username ?? "";
+  smtpPassword.value = smtp.password ?? "";
+  smtpFrom.value = smtp.from ?? smtpUsername.value;
+  const d = new Date();
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yyyy = String(d.getFullYear());
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mi = String(d.getMinutes()).padStart(2, "0");
+  mailSubject.value = `Hoja Olympia MD ${dd}${mm}${yyyy}_${hh}${mi}`;
+  mailBody.value = `Hoja escrita con Olympia MD (emulador de la Olympia AEG Carrera MD). PNG adjunto a 300 DPI.`;
+}
+
+function readSmtpForm(): SmtpConfig {
+  return {
+    host: smtpHost.value.trim(),
+    port: Number(smtpPort.value) || 587,
+    tls: smtpTls.value as SmtpConfig["tls"],
+    username: smtpUsername.value.trim(),
+    password: smtpPassword.value.trim(),
+    from: smtpFrom.value.trim(),
+  };
+}
+
+function openMailDialog(): void {
+  fillMailForm();
+  mailStatus.textContent = "";
+  mailSendBtn.disabled = false;
+  mailDialog.showModal();
+}
+
+if (isDesktop()) {
+  mailBtn.hidden = false;
+  mailBtn.addEventListener("click", openMailDialog);
+} else {
+  // En la web el envío no está disponible; el botón permanece oculto.
+  mailBtn.hidden = true;
+}
+
+mailCloseBtn.addEventListener("click", () => mailDialog.close());
+
+mailForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const config = readSmtpForm();
+  if (!config.host || !config.from || !mailTo.value.trim()) {
+    mailStatus.textContent = "Completa destinatario, servidor y remitente.";
+    return;
+  }
+  saveSmtpConfig(config);
+  const draft: MailDraft = {
+    to: mailTo.value.trim(),
+    subject: mailSubject.value.trim(),
+    body: mailBody.value.trim(),
+  };
+  mailSendBtn.disabled = true;
+  mailStatus.textContent = "Enviando…";
+  void sendPageByEmail(engine.glyphs, engine.cursor, config, draft)
+    .catch((err: unknown) => {
+      const msg = err instanceof Error ? err.message : String(err);
+      mailStatus.textContent = `Error: ${msg}`;
+    })
+    .finally(() => {
+      if (!mailStatus.textContent.startsWith("Error")) {
+        mailDialog.close();
+        engine.newPage();
+        engine.pageCounter += 1;
+        updateLabel();
+        updateCharCount();
+        draw();
+      } else {
+        mailSendBtn.disabled = false;
+      }
+    });
+});
 
 updateLabel();
 updateCharCount();

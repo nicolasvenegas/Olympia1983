@@ -1,6 +1,6 @@
 [package]
 name = "olympiamd"
-version = "0.1.0"
+version = "0.2.0"
 description = "Proyección digital de la Olympia AEG Carrera MD"
 authors = ["nicolasvenegas"]
 edition = "2021"
@@ -12,6 +12,8 @@ tauri-build = { version = "2", features = [] }
 tauri = { version = "2", features = [] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+lettre = { version = "0.11", default-features = false, features = ["builder", "hostname", "native-tls", "pool", "smtp-transport"] }
+base64 = "0.22"
 
 [profile.release]
 codegen-units = 1

@@ -21,16 +21,13 @@ function timeStamp(): string {
 }
 
 /**
- * Exporta la hoja actual como PNG a 1200 DPI (10200 × 13200 px) y lo descarga.
- * El nombre es: <fecha DDMMYYYY>_<marca de tiempo HHMM>.png (p. ej. 31122026_2159.png).
- * El lienzo de edición es ligero (150 DPI); aquí se re-renderiza la misma
- * escena vectorial a escala completa, por lo que la exportación sale nítida
- * independientemente de la resolución de edición.
+ * Renderiza la hoja actual a resolución de exportación y devuelve el PNG como
+ * Blob con la resolución física incrustada (300 DPI). No descarga nada.
  */
-export function exportPagePng(
+export function renderPagePngBlob(
   glyphs: Glyph[],
   cursor: Cursor,
-): Promise<string> {
+): Promise<Blob> {
   const scale = EXPORT_DPI / DPI;
   const canvas = document.createElement("canvas");
   canvas.width = Math.round(PAGE_W * scale);
@@ -41,7 +38,6 @@ export function exportPagePng(
   // Render sin cursor ni marcadores, sobre resolución completa.
   renderPage(ctx, glyphs, cursor, { showCursor: false, final: true });
 
-  const filename = `${dateStamp()}_${timeStamp()}.png`;
   return new Promise((resolve, reject) => {
     canvas.toBlob(
       (blob) => {
@@ -49,21 +45,33 @@ export function exportPagePng(
           reject(new Error("No se pudo generar el PNG."));
           return;
         }
-        // Incrusta la resolución física (1200 DPI) en el PNG.
-        embedDpi(blob, EXPORT_DPI).then((dpiBlob) => {
-          const url = URL.createObjectURL(dpiBlob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          setTimeout(() => URL.revokeObjectURL(url), 2000);
-          resolve(filename);
-        }, reject);
+        // Incrusta la resolución física (300 DPI) en el PNG.
+        embedDpi(blob, EXPORT_DPI).then(resolve, reject);
       },
       "image/png",
       undefined,
     );
+  });
+}
+
+/**
+ * Exporta la hoja actual como PNG a 300 DPI (2550 × 3300 px) y lo descarga.
+ * El nombre es: <fecha DDMMYYYY>_<marca de tiempo HHMM>.png (p. ej. 31122026_2159.png).
+ */
+export function exportPagePng(
+  glyphs: Glyph[],
+  cursor: Cursor,
+): Promise<string> {
+  const filename = `${dateStamp()}_${timeStamp()}.png`;
+  return renderPagePngBlob(glyphs, cursor).then((dpiBlob) => {
+    const url = URL.createObjectURL(dpiBlob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    return filename;
   });
 }

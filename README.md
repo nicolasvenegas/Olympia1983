@@ -17,8 +17,11 @@ Ante la dificultad material de encontrar cinta de repuesto, desarrollamos esta a
   oculta.
 - **Sobreimpresión**: escribir sobre una celda ocupada añade otro glifo encima
   (append-only).
-- **Exportación en imagen**: PNG a 1200 DPI (10200 × 13200 px) con la
+- **Exportación en imagen**: PNG a 300 DPI (2550 × 3300 px) con la
   resolución física incrustada.
+- **Envío por correo (app de escritorio)**: botón **Enviar** que adjunta la
+  hoja en PNG a un email vía SMTP, con los datos del servidor de correo
+  configurables dentro de la app.
 
 ## Tipografía mecánica
 
@@ -57,6 +60,19 @@ DDMMYYYY_HHMM.png   (p. ej. 31122026_2159.png)
 
 Tras exportar, la página se limpia y queda una hoja nueva en blanco, listo
 para continuar.
+
+## Envío por correo (solo escritorio)
+
+En la aplicación de escritorio (Tauri) el botón **Enviar** abre un diálogo para
+mandar la hoja actual por correo: destinatario, asunto, mensaje y datos del
+servidor SMTP (servidor, puerto, seguridad, usuario, contraseña y remitente).
+
+El PNG a 300 DPI se adjunta como `DDMMYYYY_HHMM.png`. La configuración SMTP se
+guarda localmente para las siguientes hojas. Tras un envío correcto se abre
+una hoja nueva en blanco.
+
+En la versión web de GitHub Pages el botón de envío no aparece: un sitio
+estático no puede abrir conexiones SMTP por sí mismo.
 
 ## Modelo de datos
 

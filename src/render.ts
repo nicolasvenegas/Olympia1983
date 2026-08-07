@@ -25,7 +25,7 @@ export interface RenderOptions {
 
 /**
  * Dibuja el estado completo de la hoja en un canvas 2D de resolución real
- * (2480 × 3508, 300 DPI). `ctx` debe corresponder a un canvas con esas
+ * (2550 × 3300, 300 DPI). `ctx` debe corresponder a un canvas con esas
  * dimensiones reales (atributos, no CSS).
  */
 export function renderPage(

@@ -10,6 +10,31 @@ permissions:
   contents: write
 
 jobs:
+  check-rust:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri"
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Cargo check
+        run: cargo check --manifest-path src-tauri/Cargo.toml
   build-windows:
     runs-on: windows-latest
     steps:

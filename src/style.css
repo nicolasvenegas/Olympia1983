@@ -81,7 +81,8 @@ body {
   letter-spacing: 0.05em;
 }
 
-#exportBtn {
+#exportBtn,
+#mailBtn {
   font-family: inherit;
   font-size: 0.8rem;
   letter-spacing: 0.1em;
@@ -92,13 +93,123 @@ body {
   cursor: pointer;
 }
 
-#exportBtn:hover {
+#exportBtn:hover,
+#mailBtn:hover {
   outline: 2px solid #fff;
   outline-offset: -2px;
 }
 
-#exportBtn:active {
+#exportBtn:active,
+#mailBtn:active {
   transform: translateY(1px);
+}
+
+.mail-dialog {
+  border: 2px solid #fff;
+  background: #000;
+  color: #fff;
+  padding: 0;
+  width: min(480px, 92vw);
+}
+
+.mail-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.mail-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 1.2rem;
+}
+
+.mail-title {
+  margin: 0 0 0.3rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.25em;
+}
+
+.mail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.mail-field span {
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+}
+
+.mail-field input,
+.mail-field textarea,
+.mail-field select {
+  font-family: inherit;
+  font-size: 0.85rem;
+  background: #000;
+  color: #fff;
+  border: 1px solid #666;
+  padding: 0.4rem;
+}
+
+.mail-field textarea {
+  resize: vertical;
+}
+
+.mail-smtp {
+  border: 1px solid #444;
+  padding: 0.5rem 0.5rem 0.2rem;
+}
+
+.mail-smtp summary {
+  cursor: pointer;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.mail-smtp .mail-field {
+  margin-top: 0.6rem;
+}
+
+.mail-status {
+  min-height: 1.2em;
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: #fff;
+  white-space: pre-wrap;
+}
+
+.mail-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.mail-close,
+.mail-send {
+  font-family: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  border: 1px solid #fff;
+}
+
+.mail-close {
+  background: transparent;
+  color: #fff;
+}
+
+.mail-send {
+  background: #fff;
+  color: #000;
+}
+
+.mail-send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .stage {

@@ -5,13 +5,13 @@
  * Toda medida de pixel se deriva del DPI, de modo que el tamaño físico de
  * los caracteres se mantiene constante y es idéntico entre edición y salida.
  *
- * La EDICIÓN se hace sobre un lienzo ligero (300 DPI) y la EXPORTACIÓN se
- * genera en alta resolución (1200 DPI) escalando el mismo render vectorial.
+ * La EDICIÓN se hace sobre un lienzo ligero (150 DPI) y la EXPORTACIÓN se
+ * genera en resolución completa (300 DPI) escalando el mismo render vectorial.
  *
  * Carta = 8.5 in × 11 in.
  */
-export const DPI = 150; // resolución del lienzo de edición
-export const EXPORT_DPI = 1200; // resolución del PNG exportado
+export const DPI = 150; // resolución del lienzo de edición (ligero)
+export const EXPORT_DPI = 300; // resolución del PNG exportado
 
 /** Convierte pulgadas en píxeles para el DPI actual. */
 const px = (inches: number) => Math.round(inches * DPI);

@@ -20,6 +20,7 @@
       </div>
       <div class="hud-right">
         <button id="exportBtn" type="button" title="Exportar PNG y hoja nueva (F2)">Exportar</button>
+        <button id="mailBtn" type="button" title="Enviar esta hoja por correo (solo app de escritorio)" hidden>Enviar</button>
       </div>
     </header>
     <main class="stage">
@@ -31,6 +32,59 @@
         <span id="charCount" class="char-count">0</span>
       </div>
     </footer>
+    <dialog id="mailDialog" class="mail-dialog">
+      <form method="dialog" class="mail-form" id="mailForm">
+        <h2 class="mail-title">ENVIAR ESTA HOJA</h2>
+        <label class="mail-field">
+          <span>Para</span>
+          <input id="mailTo" type="email" required placeholder="destinatario@correo.com" />
+        </label>
+        <label class="mail-field">
+          <span>Asunto</span>
+          <input id="mailSubject" type="text" />
+        </label>
+        <label class="mail-field">
+          <span>Mensaje</span>
+          <textarea id="mailBody" rows="3"></textarea>
+        </label>
+        <details class="mail-smtp">
+          <summary>Ajustes del servidor SMTP</summary>
+          <label class="mail-field">
+            <span>Servidor</span>
+            <input id="smtpHost" type="text" placeholder="smtp.ejemplo.com" />
+          </label>
+          <label class="mail-field">
+            <span>Puerto</span>
+            <input id="smtpPort" type="number" inputmode="numeric" placeholder="587" />
+          </label>
+          <label class="mail-field">
+            <span>Seguridad</span>
+            <select id="smtpTls">
+              <option value="starttls">STARTTLS (587)</option>
+              <option value="implicit">TLS/SSL (465)</option>
+              <option value="none">Sin cifrado</option>
+            </select>
+          </label>
+          <label class="mail-field">
+            <span>Usuario</span>
+            <input id="smtpUsername" type="text" autocomplete="username" />
+          </label>
+          <label class="mail-field">
+            <span>Contraseña</span>
+            <input id="smtpPassword" type="password" autocomplete="current-password" />
+          </label>
+          <label class="mail-field">
+            <span>Remitente</span>
+            <input id="smtpFrom" type="email" placeholder="tu@correo.com" />
+          </label>
+        </details>
+        <p class="mail-status" id="mailStatus"></p>
+        <div class="mail-actions">
+          <button type="button" class="mail-close" id="mailCloseBtn">Cancelar</button>
+          <button type="submit" class="mail-send" id="mailSendBtn">Enviar</button>
+        </div>
+      </form>
+    </dialog>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
