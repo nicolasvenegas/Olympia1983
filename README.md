@@ -125,4 +125,27 @@ También se puede disparar el workflow manualmente desde la pestaña **Actions**
 instaladores sin crear una etiqueta.
 
 > El identificador de versión se toma de `src-tauri/tauri.conf.json`
-> (`"version": "0.1.0"`), mantenlo sincronizado con la etiqueta `v*`.
+> (`"version"`), mantenlo sincronizado con la etiqueta `v*`.
+
+---
+
+## Colofón
+
+**Licencia** · Este proyecto se distribuye bajo la
+**GNU Affero General Public License versión 3 (AGPL-3.0)** o (a tu elección)
+cualquier versión posterior. Consulta el archivo [LICENSE](LICENSE) para el
+texto completo de la licencia.
+
+Resumen práctico de la AGPL-3.0:
+
+- **Uso libre** — puedes ejecutar, estudiar y modificar el software.
+- **Copyleft** — cualquier copia o derivado debe publicarse bajo AGPL-3.0
+  y con su código fuente.
+- **Red/redes** — si una versión modificada se ofrece a través de una red
+  (p. ej. un servidor web), debes ofrecer a sus usuarios el código fuente
+  de esa versión.
+- **Sin garantía** — el software se entrega "tal cual", sin garantías ni
+  responsabilidad.
+
+Este colofón se imprime como la última página de esta maqueta: como toda
+hoja de esta máquina, no se puede borrar.
