@@ -1,0 +1,124 @@
+:root {
+  --ink: #000;
+  --paper: #fff;
+  --muted: #999;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: "Courier Prime", "Courier New", monospace;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 1.2rem;
+  background: #000;
+  border-bottom: 2px solid #fff;
+  z-index: 2;
+}
+
+.hud.foot {
+  border-bottom: none;
+  border-top: 2px solid #fff;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.foot-data {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.foot-note {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.hud-left,
+.hud-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand {
+  font-weight: bold;
+  letter-spacing: 0.25em;
+  color: #fff;
+}
+
+.page-label {
+  letter-spacing: 0.12em;
+}
+
+.char-count,
+.hint {
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+#exportBtn {
+  font-family: inherit;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: #000;
+  background: #fff;
+  border: none;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+}
+
+#exportBtn:hover {
+  outline: 2px solid #fff;
+  outline-offset: -2px;
+}
+
+#exportBtn:active {
+  transform: translateY(1px);
+}
+
+.stage {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1.4rem;
+  overflow: auto;
+}
+
+#page {
+  background: var(--paper);
+  border: 1px solid #666;
+  width: min(100%, 880px);
+  height: auto;
+  display: block;
+  cursor: none;
+}
+
+body.exporting #page {
+  opacity: 0.5;
+}

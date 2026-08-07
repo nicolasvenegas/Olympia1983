@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Olympia MD — Máquina de Escribir</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <header class="hud">
+      <div class="hud-left">
+        <span class="brand">OLYMPIA MD</span>
+        <span class="hint">←/→ ↑/↓ mover · Shift+↑/↓ media línea · Enter salto · F2 exportar</span>
+      </div>
+      <div class="hud-right">
+        <button id="exportBtn" type="button" title="Exportar PNG y hoja nueva (F2)">Exportar</button>
+      </div>
+    </header>
+    <main class="stage">
+      <canvas id="page" aria-label="Hoja de máquina de escribir"></canvas>
+    </main>
+    <footer class="hud foot">
+      <div class="foot-data">
+        <span id="pageLabel" class="page-label">página 001</span>
+        <span id="charCount" class="char-count">0</span>
+      </div>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
