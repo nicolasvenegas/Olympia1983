@@ -17,3 +17,5 @@ Thumbs.db
 
 # PNG exportados (las salidas son imágenes puntuales de la máquina)
 *.png
+# ...salvo los iconos de la aplicación (Tauri) que sí se versionan
+!src-tauri/icons/**
