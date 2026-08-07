@@ -61,19 +61,6 @@ DDMMYYYY_HHMM.png   (p. ej. 31122026_2159.png)
 Tras exportar, la página se limpia y queda una hoja nueva en blanco, listo
 para continuar.
 
-## Envío por correo (solo escritorio)
-
-En la aplicación de escritorio (Tauri) el botón **Enviar** abre un diálogo para
-mandar la hoja actual por correo: destinatario, asunto, mensaje y datos del
-servidor SMTP (servidor, puerto, seguridad, usuario, contraseña y remitente).
-
-El PNG a 300 DPI se adjunta como `DDMMYYYY_HHMM.png`. La configuración SMTP se
-guarda localmente para las siguientes hojas. Tras un envío correcto se abre
-una hoja nueva en blanco.
-
-En la versión web de GitHub Pages el botón de envío no aparece: un sitio
-estático no puede abrir conexiones SMTP por sí mismo.
-
 ## Modelo de datos
 
 - `glyphs: { id, char, row, col, half, timestamp }[]` — lista *append-only* de
@@ -142,6 +129,60 @@ instaladores sin crear una etiqueta.
 
 > El identificador de versión se toma de `src-tauri/tauri.conf.json`
 > (`"version"`), mantenlo sincronizado con la etiqueta `v*`.
+
+---
+
+## Envío de la hoja por correo (solo escritorio)
+
+La aplicación de escritorio puede **remitir la hoja actual como PNG adjunto**
+directamente a una dirección de correo mediante SMTP, sin pasar por el cliente
+de correo del sistema. En la versión web de GitHub Pages el botón **Enviar** no
+aparece: un sitio estático no puede abrir conexiones SMTP por sí mismo.
+
+### Cómo se usa
+
+Pulsar el botón **Enviar** abre un diálogo con dos bloques:
+
+1. **Datos del mensaje**
+   - **Para** — correo del destinatario (obligatorio).
+   - **Asunto** — por defecto `Hoja Olympia MD DDMMYYYY_HHMM`.
+   - **Mensaje** — texto libre que acompaña al adjunto.
+2. **Ajustes del servidor SMTP** (desplegable)
+   - **Servidor** (p. ej. `smtp.gmail.com`), **puerto** y **seguridad**
+     (`STARTTLS` para 587, `TLS/SSL` para 465 o `Sin cifrado`).
+   - **Usuario** y **contraseña** de la cuenta emisora.
+   - **Remitente** — dirección que aparece en `From:`.
+
+Al pulsar **Enviar**, la hoja se renderiza a 300 DPI (2550 × 3300 px), se
+adjunta como `DDMMYYYY_HHMM.png` y se envía. Tras un envío correcto se abre
+una hoja nueva en blanco, igual que al exportar. Los ajustes SMTP se guardan
+en el almacenamiento local y quedan precargados la próxima vez.
+
+> Para Gmail u Outlook se necesita una **contraseña de aplicación** (no la
+> contraseña habitual de la cuenta).
+
+### Límites y consideraciones
+
+- El envío requiere **conexión a internet** y que el servidor SMTP acepte las
+  credenciales configuradas (autenticación).
+- Los servidores de correo suelen limitar el tamaño de adjuntos (habitualmente
+  25 MB); a 300 DPI la imagen suele estar por debajo.
+- La configuración quedan local, en `localStorage`; la contraseña se almacena
+  sin cifrar en la máquina del usuario.
+
+### Núcleo técnico
+
+- `src-tauri/src/mail.rs` — comando `send_email` del backend Rust: construye el
+  multipart con `lettre` (cuerpo `text/plain` + PNG `image/png` con
+  `Content-Disposition: attachment`), elige transporte según el modo de
+  seguridad (`starttls_relay`, `relay` o sin cifrado) y envía con la cuenta
+  SMTP configurada.
+- `src/mail.ts` — helpers del frontend: detecta si la app corre en Tauri
+  (`isTauri()`), guarda/carga la configuración SMTP y dispara el comando desde
+  el webview.
+- `src/export.ts` — `renderPagePngBlob()` re-renderiza la hoja a resolución de
+  exportación y devuelve el `Blob` con el parámetro `pHYs` (300 DPI) incrustado;
+  lo comparten la exportación (`F2`) y el envío por correo.
 
 ---
 
