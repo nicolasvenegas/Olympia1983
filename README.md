@@ -1,4 +1,4 @@
-# Olympia MD — Proyección digital de la Olympia AEG Carrera MD
+# Emulador Olympia MD  
 
 Ante la dificultad material de encontrar cinta de repuesto, desarrollamos esta aplicación que virtualiza el conjunto de características de registro de la máquina de escribir electrónica
 **Olympia AEG Carrera MD**.
