@@ -17,7 +17,7 @@ export interface MailDraft {
   body: string;
 }
 
-const SMTP_STORAGE_KEY = "olympiamd.smtp";
+const SMTP_STORAGE_KEY = "olympia1983.smtp";
 
 /** Devuelve true cuando la app corre dentro del shell Tauri de escritorio. */
 export function isDesktop(): boolean {

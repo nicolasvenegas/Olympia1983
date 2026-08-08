@@ -175,8 +175,8 @@ function fillMailForm(): void {
   const yyyy = String(d.getFullYear());
   const hh = String(d.getHours()).padStart(2, "0");
   const mi = String(d.getMinutes()).padStart(2, "0");
-  mailSubject.value = `Hoja Olympia MD ${dd}${mm}${yyyy}_${hh}${mi}`;
-  mailBody.value = `Hoja escrita con Olympia MD (emulador de la Olympia AEG Carrera MD). PNG adjunto a 300 DPI.`;
+  mailSubject.value = `Hoja Olympia1983 ${dd}${mm}${yyyy}_${hh}${mi}`;
+  mailBody.value = `Hoja escrita con Olympia1983 (emulador de la Olympia AEG Carrera MD). PNG adjunto a 300 DPI.`;
 }
 
 function readSmtpForm(): SmtpConfig {

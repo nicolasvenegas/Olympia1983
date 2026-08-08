@@ -1,4 +1,4 @@
-# Emulador Olympia MD  
+# Emulador Olympia1983  
 
 Ante la dificultad material de encontrar cinta de repuesto, desarrollamos esta aplicación que preserva digitalmente un comportamiento: virtualiza el conjunto de características de registro de la máquina de escribir electrónica
 **Olympia AEG Carrera MD**.
@@ -90,8 +90,8 @@ npm run build    # compilación y build de producción
 La aplicación tiene **dos caras** que comparten el mismo código:
 
 1. **Web** (`Vite + TypeScript + Canvas 2D`): se despliega públicamente como
-   GitHub Page en <https://nicolasvenegas.github.io/olympiaMD/>. El build usa
-   `base: "/olympiaMD/"` en `vite.config.ts` para que los recursos carguen bien
+   GitHub Page en <https://nicolasvenegas.github.io/Olympia1983/>. El build usa
+   `base: "/Olympia1983/"` en `vite.config.ts` para que los recursos carguen bien
    bajo ese subdirectorio.
 2. **Escritorio** (`Tauri 2`): un shell nativo (WebView2 de Windows) que envuelve
    la misma web y genera un instalador `.exe` descargable desde las *Releases*.
@@ -120,8 +120,8 @@ git push origin v0.1.1
 El workflow compila automáticamente el frontend y el binario de Tauri en
 Windows, y al final crea/actualiza la release con los instaladores:
 
-- `Olympia.MD_<versión>_x64-setup.exe` (instalador NSIS)
-- `Olympia.MD_<versión>_x64_en-US.msi`
+- `Olympia1983_<versión>_x64-setup.exe` (instalador NSIS)
+- `Olympia1983_<versión>_x64_en-US.msi`
 
 También se puede disparar el workflow manualmente desde la pestaña **Actions**
 (*Actions → Build Windows installer → Run workflow*), útil para generar
@@ -145,7 +145,7 @@ Pulsar el botón **Enviar** abre un diálogo con dos bloques:
 
 1. **Datos del mensaje**
    - **Para** — correo del destinatario (obligatorio).
-   - **Asunto** — por defecto `Hoja Olympia MD DDMMYYYY_HHMM`.
+   - **Asunto** — por defecto `Hoja Olympia1983 DDMMYYYY_HHMM`.
    - **Mensaje** — texto libre que acompaña al adjunto.
 2. **Ajustes del servidor SMTP** (desplegable)
    - **Servidor** (p. ej. `smtp.gmail.com`), **puerto** y **seguridad**
