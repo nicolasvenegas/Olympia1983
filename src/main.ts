@@ -1,7 +1,7 @@
 import { PAGE_W, PAGE_H, COLS, ROWS } from "./layout";
 import { renderPage } from "./render";
 import { Typewriter } from "./engine";
-import { exportPagePng } from "./export";
+import { exportPagePng, renderPagePngBlob } from "./export";
 import {
   isDesktop,
   loadSmtpConfig,
@@ -22,6 +22,7 @@ const pageLabel = document.getElementById("pageLabel") as HTMLElement;
 const charCount = document.getElementById("charCount") as HTMLElement;
 const lineCount = document.getElementById("lineCount") as HTMLElement;
 const exportBtn = document.getElementById("exportBtn") as HTMLButtonElement;
+const printBtn = document.getElementById("printBtn") as HTMLButtonElement;
 const mailBtn = document.getElementById("mailBtn") as HTMLButtonElement;
 const mailDialog = document.getElementById("mailDialog") as HTMLDialogElement;
 const mailForm = document.getElementById("mailForm") as HTMLFormElement;
@@ -69,6 +70,46 @@ function react(_action: import("./engine").Action): void {
   updateLineCount();
 }
 
+/** Abre una ventana con la hoja a 300 DPI y la envía a la impresora. */
+function printCurrentPage(): void {
+  if (document.body.classList.contains("exporting")) return;
+  const win = window.open("", "_blank", "width=900,height=1100");
+  if (!win) return;
+  document.body.classList.add("exporting");
+  renderPagePngBlob(engine.glyphs, engine.cursor)
+    .then((blob) => {
+      const url = URL.createObjectURL(blob);
+      win.document.write(`<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Olympia1983 — Imprimir</title>
+<style>
+  @page { size: Letter; margin: 0; }
+  html, body { margin: 0; padding: 0; }
+  img { display: block; width: 8.5in; height: 11in; }
+</style>
+</head>
+<body><img id="printImage" src="${url}"></body>
+</html>`);
+      win.document.close();
+      const img = win.document.getElementById("printImage") as HTMLImageElement;
+      img.onload = () => {
+        win.focus();
+        win.print();
+      };
+      win.onafterprint = () => {
+        URL.revokeObjectURL(url);
+        win.close();
+      };
+    })
+    .catch((err) => {
+      console.error("Fallo al imprimir:", err);
+      win.close();
+    })
+    .finally(() => document.body.classList.remove("exporting"));
+}
+
 /** Exporta el PNG, limpia la página y deja una hoja nueva en blanco. */
 async function exportAndNewPage(): Promise<void> {
   if (document.body.classList.contains("exporting")) return;
@@ -114,6 +155,10 @@ function onKeyDown(e: KeyboardEvent): void {
     case "F2":
       e.preventDefault();
       void exportAndNewPage();
+      return;
+    case "F3":
+      e.preventDefault();
+      printCurrentPage();
       return;
     case "Backspace":
     case "Delete":
@@ -166,6 +211,7 @@ function blink(t: number): void {
 
 window.addEventListener("keydown", onKeyDown, { capture: true });
 exportBtn.addEventListener("click", () => void exportAndNewPage());
+printBtn.addEventListener("click", printCurrentPage);
 canvas.addEventListener("contextmenu", (e) => e.preventDefault());
 
 /** Rellena el formulario con la configuración guardada y el state actual. */

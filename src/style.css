@@ -82,7 +82,8 @@ body {
 }
 
 #exportBtn,
-#mailBtn {
+#mailBtn,
+#printBtn {
   font-family: inherit;
   font-size: 0.8rem;
   letter-spacing: 0.1em;
@@ -94,13 +95,15 @@ body {
 }
 
 #exportBtn:hover,
-#mailBtn:hover {
+#mailBtn:hover,
+#printBtn:hover {
   outline: 2px solid #fff;
   outline-offset: -2px;
 }
 
 #exportBtn:active,
-#mailBtn:active {
+#mailBtn:active,
+#printBtn:active {
   transform: translateY(1px);
 }
 

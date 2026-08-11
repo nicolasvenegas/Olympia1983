@@ -46,6 +46,7 @@ Olympia AEG Carrera MD:
 | `↑` / `↓` | Cambia de línea conservando la columna |
 | `Shift` + `↑` / `↓` | Salto de media línea (sobreíndice / subíndice) |
 | `F2` | Exporta la hoja en PNG y crea una nueva en blanco |
+| `F3` | Imprime la hoja actual a 300 DPI |
 | `Backspace` / `Delete` | Bloqueados: no existe el borrado |
 
 ## Exportación
@@ -60,6 +61,12 @@ DDMMYYYY_HHMM.png   (p. ej. 31122026_2159.png)
 
 Tras exportar, la página se limpia y queda una hoja nueva en blanco, listo
 para continuar.
+
+## Impresión
+
+El botón **Imprimir** (o `F3`) abre en una ventana la hoja renderizada a
+300 DPI y la envía a la impresora del sistema. Funciona tanto en la versión
+web como en la aplicación de escritorio.
 
 ## Modelo de datos
 
