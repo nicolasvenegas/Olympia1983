@@ -236,3 +236,35 @@ body {
 body.exporting #page {
   opacity: 0.5;
 }
+
+/* Impresión: zona oculta que al imprimir muestra solo la hoja a 300 DPI. */
+#printArea {
+  display: none;
+}
+
+@page {
+  size: Letter;
+  margin: 0;
+}
+
+@media print {
+  body > *:not(#printArea) {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    margin: 0;
+  }
+
+  #printArea {
+    display: block !important;
+    margin: 0;
+  }
+
+  #printArea img {
+    display: block;
+    width: 8.5in;
+    height: 11in;
+  }
+}

@@ -70,43 +70,19 @@ function react(_action: import("./engine").Action): void {
   updateLineCount();
 }
 
-/** Abre una ventana con la hoja a 300 DPI y la envía a la impresora. */
+/** Renderiza la hoja a 300 DPI y la envía a la impresora del sistema. */
 function printCurrentPage(): void {
   if (document.body.classList.contains("exporting")) return;
-  const win = window.open("", "_blank", "width=900,height=1100");
-  if (!win) return;
   document.body.classList.add("exporting");
   renderPagePngBlob(engine.glyphs, engine.cursor)
     .then((blob) => {
       const url = URL.createObjectURL(blob);
-      win.document.write(`<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<title>Olympia1983 — Imprimir</title>
-<style>
-  @page { size: Letter; margin: 0; }
-  html, body { margin: 0; padding: 0; }
-  img { display: block; width: 8.5in; height: 11in; }
-</style>
-</head>
-<body><img id="printImage" src="${url}"></body>
-</html>`);
-      win.document.close();
-      const img = win.document.getElementById("printImage") as HTMLImageElement;
-      img.onload = () => {
-        win.focus();
-        win.print();
-      };
-      win.onafterprint = () => {
-        URL.revokeObjectURL(url);
-        win.close();
-      };
+      const img = document.getElementById("printImage") as HTMLImageElement;
+      img.onload = () => window.print();
+      img.src = url;
+      window.onafterprint = () => URL.revokeObjectURL(url);
     })
-    .catch((err) => {
-      console.error("Fallo al imprimir:", err);
-      win.close();
-    })
+    .catch((err) => console.error("Fallo al imprimir:", err))
     .finally(() => document.body.classList.remove("exporting"));
 }
 
