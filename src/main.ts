@@ -1,4 +1,4 @@
-import { PAGE_W, PAGE_H, COLS } from "./layout";
+import { PAGE_W, PAGE_H, COLS, ROWS } from "./layout";
 import { renderPage } from "./render";
 import { Typewriter } from "./engine";
 import { exportPagePng } from "./export";
@@ -20,6 +20,7 @@ const ctx = canvas.getContext("2d")!;
 
 const pageLabel = document.getElementById("pageLabel") as HTMLElement;
 const charCount = document.getElementById("charCount") as HTMLElement;
+const lineCount = document.getElementById("lineCount") as HTMLElement;
 const exportBtn = document.getElementById("exportBtn") as HTMLButtonElement;
 const mailBtn = document.getElementById("mailBtn") as HTMLButtonElement;
 const mailDialog = document.getElementById("mailDialog") as HTMLDialogElement;
@@ -53,13 +54,19 @@ function updateLabel(): void {
 /** Caracteres usados / disponibles y cuántos quedan en la línea actual. */
 function updateCharCount(): void {
   const remaining = Math.max(COLS - engine.cursor.col, 0);
-  charCount.textContent = `línea: ${engine.cursor.col}/${COLS} · quedan ${remaining}`;
+  charCount.textContent = `columna: ${engine.cursor.col}/${COLS} · quedan ${remaining}`;
 }
 
-/** Redibuja la hoja y actualiza el contador tras cada acción. */
+/** Línea actual del carro (1-based) sobre el total de la hoja. */
+function updateLineCount(): void {
+  lineCount.textContent = `línea: ${engine.cursor.row + 1}/${ROWS}`;
+}
+
+/** Redibuja la hoja y actualiza los contadores tras cada acción. */
 function react(_action: import("./engine").Action): void {
   draw();
   updateCharCount();
+  updateLineCount();
 }
 
 /** Exporta el PNG, limpia la página y deja una hoja nueva en blanco. */
@@ -78,6 +85,7 @@ async function exportAndNewPage(): Promise<void> {
   }
   draw();
   updateCharCount();
+  updateLineCount();
 }
 
 const DESTRUCTIVE_MOD = new Set(["backspace", "delete", "z", "x", "v", "a", "y"]);
@@ -234,6 +242,7 @@ mailForm.addEventListener("submit", (e) => {
         engine.pageCounter += 1;
         updateLabel();
         updateCharCount();
+        updateLineCount();
         draw();
       } else {
         mailSendBtn.disabled = false;
@@ -243,5 +252,6 @@ mailForm.addEventListener("submit", (e) => {
 
 updateLabel();
 updateCharCount();
+updateLineCount();
 draw();
 requestAnimationFrame(blink);

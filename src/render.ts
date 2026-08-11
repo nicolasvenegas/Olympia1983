@@ -4,10 +4,6 @@ import {
   PAGE_H,
   FONT_STACK,
   FONT_SIZE,
-  MARGIN_LEFT,
-  MARGIN_RIGHT,
-  MARGIN_TOP,
-  MARGIN_BOTTOM,
   createLayout,
   type Layout,
 } from "./layout";
@@ -55,7 +51,7 @@ export function renderPage(
 /** Cursor tipo carro con destello: una barra vertical contundente. */
 function drawCursor(ctx: CanvasRenderingContext2D, cursor: Cursor, layout: Layout): void {
   const baseY = layout.y(cursor.row) + cursor.half * (layout.lineH / 2);
-  const x = MARGIN_LEFT + cursor.col * layout.charW - LINE_CAP / 2;
+  const x = layout.left + cursor.col * layout.charW - LINE_CAP / 2;
   const top = baseY - layout.lineH * 0.42;
   const bottom = baseY + layout.lineH * 0.42;
 

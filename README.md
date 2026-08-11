@@ -11,8 +11,8 @@ Ante la dificultad material de encontrar cinta de repuesto, desarrollamos esta a
 - **Una única hoja**: formato Carta (US Letter, 215.9 × 279.4 mm). No existe
   segunda página ni scroll vertical: al llegar al final se puede seguir
   escribiendo y sobreimprimiendo, pero no bajar más.
-- **Rejilla monoespaciada fija**: 73 columnas × 37 líneas, derivadas de la
-  mecánica real de la máquina.
+- **Rejilla monoespaciada fija**: 73 columnas × 45 líneas, con el bloque de
+  texto centrado en la hoja.
 - **Sin ratón**: toda la interacción es por teclado; el cursor gráfico se
   oculta.
 - **Sobreimpresión**: escribir sobre una celda ocupada añade otro glifo encima
@@ -33,7 +33,7 @@ Olympia AEG Carrera MD:
 | Familia | Courier Prime (monoespaciado, estilo Pica) |
 | Tamaño de tipo | 10–11 pt |
 | Interlineado | 1.5 (selector físico 1 / 1.5 / 2) |
-| Alto de línea | ≈ 6.3 mm (18 pt) |
+| Alto de línea | ≈ 5.3 mm (15 pt) |
 | Paso de escritura | Pitch 10 (Pica): 10 caracteres por pulgada, 2.54 mm/carácter |
 
 ## Controles

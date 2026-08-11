@@ -32,22 +32,29 @@ const FONT_SIZE_PT = 10; // 10–11 pt (pica de oficina)
 /**
  * Proporciones de la fuente monoespaciada móvil, ajustadas a las
  * especificaciones de la Olympia AEG Carrera MD:
- *  - CHAR_KERN (avance/glifo): pitch Pica = 10 cpp/in → 7.2 pt de ancho por
- *    carácter sobre un cuerpo de 10 pt ⇒ 0.72.
- *  - LINE_HEIGHT_KERN (interlineado): selector 1.5 ⇒ 1.5 × 4.23 mm = 6.35 mm ≈
- *    18 pt de alto de línea sobre cuerpo de 10 pt ⇒ 1.8.
+ *  - CHAR_KERN (avance visual del glifo): espaciado entre caracteres. El paso
+ *    mecánico de Pica (0.72) dejaba aire de más porque el avance real de
+ *    Courier Prime es ≈ 0.6em; 0.585 lo acerca aún más: el bloque de texto
+ *    resulta ~10% más estrecho que con 0.65 y se centra en la hoja.
+ *  - PITCH_KERN (paso de columna para la rejilla): pitch Pica = 10 cpi →
+ *    7.2 pt por columna sobre un cuerpo de 10 pt ⇒ 0.72. Determina COLS y no
+ *    depende del espaciado visual: las columnas por línea no cambian.
+ *  - LINE_HEIGHT_KERN (interlineado): selector compacto ⇒ 15 pt de alto de
+ *    línea sobre un cuerpo de 10 pt ⇒ 1.5 (más apretado que el original 1.8).
  */
-const CHAR_KERN = 0.72; // 10 cpi (Pica): 2.54 mm por carácter
-const LINE_HEIGHT_KERN = 1.8; // interlineado 1.5 (avance de rodillo ≈ 6.3 mm)
+const CHAR_KERN = 0.585; // avance visual de cada glifo (espaciado entre caracteres)
+const PITCH_KERN = 0.72; // paso mecánico de columna: 10 cpi (Pica), 2.54 mm
+const LINE_HEIGHT_KERN = 1.5; // alto de línea compacto (15 pt)
 
 /** Fuente: "Courier Prime" con respaldo de sistema. */
 export const FONT_STACK = '"Courier Prime", "Courier New", "Menlo", monospace';
 
 export const FONT_SIZE = Math.round((FONT_SIZE_PT / 72) * DPI);
 
-/** Rejilla fija: columnas y filas determinadas por los márgenes. */
+/** Rejilla fija: las columnas dependen del paso mecánico (PITCH_KERN), no del
+ * espaciado visual (CHAR_KERN); cambiar el espaciado no reduce las columnas. */
 export const COLS = Math.floor(
-  (PAGE_W - MARGIN_LEFT - MARGIN_RIGHT) / (FONT_SIZE * CHAR_KERN),
+  (PAGE_W - MARGIN_LEFT - MARGIN_RIGHT) / (FONT_SIZE * PITCH_KERN),
 );
 export const ROWS = Math.floor(
   (PAGE_H - MARGIN_TOP - MARGIN_BOTTOM) / (FONT_SIZE * LINE_HEIGHT_KERN),
@@ -56,6 +63,8 @@ export const ROWS = Math.floor(
 export interface Layout {
   charW: number;
   lineH: number;
+  /** Origen horizontal del bloque de texto (centrado en la hoja). */
+  left: number;
   x(col: number): number;
   y(row: number): number;
 }
@@ -63,10 +72,12 @@ export interface Layout {
 export function createLayout(): Layout {
   const charW = FONT_SIZE * CHAR_KERN;
   const lineH = FONT_SIZE * LINE_HEIGHT_KERN;
+  const left = (PAGE_W - COLS * charW) / 2;
   return {
     charW,
     lineH,
-    x: (col: number) => MARGIN_LEFT + col * charW + charW / 2,
+    left,
+    x: (col: number) => left + col * charW + charW / 2,
     y: (row: number) => MARGIN_TOP + row * lineH + lineH / 2,
   };
 }
